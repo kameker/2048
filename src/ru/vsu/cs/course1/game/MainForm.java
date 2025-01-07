@@ -2,6 +2,7 @@ package ru.vsu.cs.course1.game;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
 import ru.vsu.cs.util.DrawUtils;
 import ru.vsu.cs.util.JTableUtils;
 import ru.vsu.cs.util.SwingUtils;
@@ -16,6 +17,7 @@ public class MainForm extends JFrame {
     private JTable tableGameField;
     private JLabel labelStatus;
     private JLabel winLabel;
+    private JButton reButton;
 
     private static final int DEFAULT_COL_COUNT = 4;
     private static final int DEFAULT_ROW_COUNT = 4;
@@ -98,6 +100,7 @@ public class MainForm extends JFrame {
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
                 if (e.getID() == KeyEvent.KEY_PRESSED) {
+                    if (!game.isLose()) game.fieldCopy = game.getField();
                     if (e.getKeyCode() == 37) {
                         game.moveLeft();
                         updateView();
@@ -114,6 +117,13 @@ public class MainForm extends JFrame {
                 }
 
                 return false;
+            }
+        });
+        reButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                game.reField();
+                updateView();
             }
         });
     }
@@ -158,7 +168,7 @@ public class MainForm extends JFrame {
         JMenu menuHelp = new JMenu("Справка");
         menuBarMain.add(menuHelp);
         menuHelp.add(createMenuItem("Правила", "ctrl+R", null, e -> {
-            SwingUtils.showInfoMessageBox("Здесь должно быть краткое описание правил ...", "Правила");
+            SwingUtils.showInfoMessageBox("Собери число 2048 используя кнопки 'стрелки'", "Правила");
         }));
         menuHelp.add(createMenuItem("О программе", "ctrl+A", null, e -> {
             SwingUtils.showInfoMessageBox(
@@ -187,6 +197,9 @@ public class MainForm extends JFrame {
     private void updateView() {
         if (game.isWIn()) {
             winLabel.setText("Гоооооооооооооол! Попробуй набрать 2^^16");
+        }
+        if (game.isLose()) {
+            winLabel.setText("Ты проиграл");
         }
         tableGameField.repaint();
     }
@@ -259,9 +272,17 @@ public class MainForm extends JFrame {
         labelStatus = new JLabel();
         labelStatus.setText("Label");
         panelMain.add(labelStatus, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panelMain.add(panel1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         winLabel = new JLabel();
         winLabel.setText("");
-        panelMain.add(winLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(winLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        reButton = new JButton();
+        reButton.setText("Назад");
+        panel1.add(reButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(100, -1), null, null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        panel1.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
     }
 
     /**

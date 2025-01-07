@@ -24,7 +24,7 @@ public class MyUtils {
         return new int[]{rndRow, rndCol};
     }
     public static Color[] getColors(){
-        Color[] colors2048 = new Color[16];
+        Color[] colors2048 = new Color[17];
         colors2048[0] = new Color(255,200,81);
         colors2048[1] = new Color(255,150,81);
         colors2048[2] = new Color(255,100,90);
@@ -44,6 +44,8 @@ public class MyUtils {
         colors2048[13] = new Color(50,50,50);
         colors2048[14] = new Color(25,25,25);
         colors2048[15] = new Color(10,10,10);
+
+        colors2048[16] = new Color(0,0,0);
         return colors2048;
     }
     public static double log2(double x){
@@ -63,18 +65,22 @@ public class MyUtils {
         return false;
     }
     public static int[][] rotateMatrixRight(int[][] field){
-        int[][] newMatrix = new int[field.length][field[0].length];
-        for(int i = 0; i < field[0].length; i++){
-            for(int j = 0; j < field.length; j++){
-                newMatrix[j][field.length - i - 1] = field[i][j];
+        int row = field.length;
+        int col = field[0].length;
+        int[][] newMatrix = new int[col][row];
+        for(int i = 0; i < col; i++){
+            for(int j = 0; j < row; j++){
+                newMatrix[i][j] = field[row - j - 1][i];
             }
         }
         return newMatrix;
     }
     public static int[][] rotateMatrixLeft(int[][] field){
+
         int row = field.length;
         int col = field[0].length;
-        int[][] newMatrix = new int[row][col];
+        System.out.println(row + " " + col);
+        int[][] newMatrix = new int[col][row];
         for(int i = 0; i < col; i++){
             for(int j = 0; j < row; j++){
                 newMatrix[i][j] = field[j][col - i - 1];
@@ -82,12 +88,17 @@ public class MyUtils {
         }
         return newMatrix;
     }
+    public static boolean myRandom(int num,int arg){
+        Random rnd = new Random();
+        return rnd.nextInt(arg) == num;
+    }
     public static void main(String[] args) {
-        int[][] matrix = new int[][]{{0,2,0,0},
+        int[][] matrix = new int[][]{{3,2,0,4},
                                      {0,0,2,0},
                                      {0,0,0,2},
-                                     {0,0,0,2}};
-        matrix = rotateMatrixLeft(matrix);
+                                     {0,0,0,2},
+                                     {1,2,0,2}};
+        matrix = rotateMatrixRight(matrix);
         for (int i = 0 ; i < matrix.length ; i++){
             System.out.println(Arrays.toString(matrix[i]));
         }

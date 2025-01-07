@@ -19,7 +19,8 @@ public class Game {
      * двумерный массив для хранения игрового поля
      * (в данном случае цветов, 0 - пусто; создается / пересоздается при старте игры)
      */
-    private int[][] field = null;
+    public int[][] field = null;
+    public int[][] fieldCopy = null;
 
     /**
      * Максимальное кол-во цветов
@@ -38,42 +39,77 @@ public class Game {
         return false;
     }
 
+    public boolean isLose() {
+        for (int x = 0; x < field.length; x++) {
+            for (int y = 0; y < field[x].length; y++) {
+                if (field[x][y] == 0) {
+                    return false;
+                }
+            }
+        }
+        for (int x = 0; x < field.length; x++) {
+            for (int y = 0; y < field[x].length; y++) {
+                if (x == 0 && y == 0 && field[x][y] != field[x + 1][y] && field[x][y] != field[x][y + 1]) {
+                    return true;
+                } else if (x == field.length - 1 && y == field[0].length - 1 && field[x][y] != field[x - 1][y] && field[x][y] != field[x][y - 1]) {
+                    return true;
+                } else if (x == 0 && y == field[0].length - 1 && field[x][y] != field[x + 1][y] && field[x][y] != field[x][y - 1]) {
+                    return true;
+                } else if (x == field.length - 1 && y == 0 && field[x][y] != field[x - 1][y] && field[x][y] != field[x][y + 1]) {
+                    return true;
+                } else if (field[x][y] != field[x - 1][y] &&
+                           field[x][y] != field[x][y + 1]&&
+                           field[x][y] != field[x + 1][y]&&
+                           field[x][y] != field[x][y - 1]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void newGame(int rowCount, int colCount, int colorCount) {
-        // создаем поле
         field = new int[rowCount][colCount];
         this.colorCount = colorCount;
-        //field[0][3] = 2;
-        //field[0][0] = 2;
-        //field[0][1] = 2;
-        //field[0][2] = 2;
-
         for (int i = 0; i < 2; i++) {
             int[] rowAndCol = getRandomEmptySlot(this.field);
             field[rowAndCol[0]][rowAndCol[1]] = 2;
         }
+        fieldCopy = getField();
     }
 
-    public void generateTwoInFreeSlot() {
+    public void generateNumInFreeSlot() {
         if (MyUtils.existsSlots2048(this.field)) {
             int[] rowAndCol = getRandomEmptySlot(this.field);
-            field[rowAndCol[0]][rowAndCol[1]] = 2;
+            if (MyUtils.myRandom(1, 10)) {
+                field[rowAndCol[0]][rowAndCol[1]] = 4;
+            } else {
+                field[rowAndCol[0]][rowAndCol[1]] = 2;
+            }
             return;
         }
     }
-
 
 
     public static boolean rowIsDoneRight(int[] row) {
         for (int x = 0; x < 3; x++) {
             if (row[x] != 0 && row[x + 1] == 0) {
                 return false;
-            } else if (row[x] == row[x + 1] && (row[x] != 0 && row[x+1] != 0)) {
+            } else if (row[x] == row[x + 1] && (row[x] != 0 && row[x + 1] != 0)) {
 
                 return false;
             }
         }
         return true;
     }
+
+    public void reField() {
+        int[][] gfc = fieldCopy.clone();
+        fieldCopy = field.clone();
+        field = gfc.clone();
+
+    }
+
     public void moveLeft() {
         this.field = MyUtils.rotateMatrixRight(this.field);
         this.field = MyUtils.rotateMatrixRight(this.field);
@@ -82,23 +118,41 @@ public class Game {
         this.field = MyUtils.rotateMatrixLeft(this.field);
         System.out.println("Left");
     }
-    public void moveRight() {
-        for (int x = 0; x < 4; x++) {
-            while (!rowIsDoneRight(field[x])) {
-                for (int y = 0; y < 3; y++) {
-                    if (field[x][y] != 0 && field[x][y + 1] == 0) {
-                        field[x][y+1] = field[x][y];
-                        field[x][y] = 0;
-                    } else if (field[x][y] == field[x][y + 1]) {
-                        field[x][y+1] = field[x][y] * 2;
-                        field[x][y] = 0;
-                    }
 
+    public void moveRight() {
+        int firstNum;
+        int secondNum;
+        for (int i = 0; i < field.length; i++) {
+            int[] newCol = new int[field[i].length];
+            int k = field[i].length - 1;
+            for (int j = field[i].length - 1; j >= 0; j--) {
+                firstNum = field[i][j];
+                if (firstNum == 0) {
+                    continue;
+                } else {
+                    secondNum = 0;
+                    int p = 0;
+                    for (int m = j - 1; m >= 0; m--) {
+                        secondNum = field[i][m];
+                        if (secondNum != 0) {
+                            p = m;
+                            break;
+                        }
+                    }
+                    if (firstNum == secondNum) {
+                        newCol[k] = firstNum * 2;
+                        field[i][p] = 0;
+                    } else {
+                        newCol[k] = firstNum;
+                    }
+                    k--;
                 }
+
             }
+            field[i] = newCol;
         }
         System.out.println("Right");
-        generateTwoInFreeSlot();
+        generateNumInFreeSlot();
     }
 
     public void moveUp() {
@@ -132,4 +186,11 @@ public class Game {
     }
 
 
+    public int[][] getFieldCopy() {
+        return fieldCopy;
+    }
+
+    public int[][] getField() {
+        return field;
+    }
 }
