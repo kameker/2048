@@ -38,34 +38,27 @@ public class Game {
         }
         return false;
     }
-
-    public boolean isLose() {
-        for (int x = 0; x < field.length; x++) {
-            for (int y = 0; y < field[x].length; y++) {
-                if (field[x][y] == 0) {
+    public boolean checkDuplicates(int[][] array) {
+        for (int i = 0; i < array.length; i++) {
+            for (int j = 0; j < array[0].length; j++) {
+                if (i < array.length - 1 && array[i][j] == array[i + 1][j]) {
+                    return false;
+                }
+                if (j < array[0].length - 1 && array[i][j] == array[i][j + 1]) {
                     return false;
                 }
             }
         }
+        return true;
+    }
+    public boolean isLose() {
         for (int x = 0; x < field.length; x++) {
             for (int y = 0; y < field[x].length; y++) {
-                if (x == 0 && y == 0 && field[x][y] != field[x + 1][y] && field[x][y] != field[x][y + 1]) {
-                    return true;
-                } else if (x == field.length - 1 && y == field[0].length - 1 && field[x][y] != field[x - 1][y] && field[x][y] != field[x][y - 1]) {
-                    return true;
-                } else if (x == 0 && y == field[0].length - 1 && field[x][y] != field[x + 1][y] && field[x][y] != field[x][y - 1]) {
-                    return true;
-                } else if (x == field.length - 1 && y == 0 && field[x][y] != field[x - 1][y] && field[x][y] != field[x][y + 1]) {
-                    return true;
-                } else if (field[x][y] != field[x - 1][y] &&
-                           field[x][y] != field[x][y + 1]&&
-                           field[x][y] != field[x + 1][y]&&
-                           field[x][y] != field[x][y - 1]) {
-                    return true;
-                }
+                if (field[x][y] == 0) return false;
             }
         }
-        return false;
+
+        return checkDuplicates(field);
     }
 
     public void newGame(int rowCount, int colCount, int colorCount) {

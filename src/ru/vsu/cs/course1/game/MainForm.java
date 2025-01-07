@@ -196,10 +196,10 @@ public class MainForm extends JFrame {
 
     private void updateView() {
         if (game.isWIn()) {
-            winLabel.setText("Гоооооооооооооол! Попробуй набрать 2^^16");
+            winLabel.setText("Гоооооооооооооол! за " + time + " Попробуй набрать 2^^16");
         }
         if (game.isLose()) {
-            winLabel.setText("Ты проиграл");
+            winLabel.setText("Ты проиграл за " + time);
         }
         tableGameField.repaint();
     }
@@ -222,7 +222,15 @@ public class MainForm extends JFrame {
         if (cellValue <= 0) {
             return;
         }
-        Color color = COLORS[(int) MyUtils.log2(cellValue) - 1];
+        Color defultColor = new Color(0, 0, 0);
+        int idColor = (int) MyUtils.log2(cellValue) - 1;
+        Color color;
+        if (idColor > 16) {
+            color = defultColor;
+        } else {
+            color = COLORS[idColor];
+        }
+
 
         int size = Math.min(cellWidth, cellHeight);
         int bound = (int) Math.round(size * 0.1);
