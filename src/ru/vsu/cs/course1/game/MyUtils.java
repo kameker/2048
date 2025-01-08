@@ -76,10 +76,8 @@ public class MyUtils {
         return newMatrix;
     }
     public static int[][] rotateMatrixLeft(int[][] field){
-
         int row = field.length;
         int col = field[0].length;
-        System.out.println(row + " " + col);
         int[][] newMatrix = new int[col][row];
         for(int i = 0; i < col; i++){
             for(int j = 0; j < row; j++){
@@ -91,6 +89,11 @@ public class MyUtils {
     public static boolean myRandom(int num,int arg){
         Random rnd = new Random();
         return rnd.nextInt(arg) == num;
+    }
+    public static void printMatrix2(int[][] matrix){
+        for(int i = 0; i < matrix.length; i++){
+            System.out.println(Arrays.toString(matrix[i]));
+        }
     }
     public static void main(String[] args) {
         int[][] matrix = new int[][]{{3,2,0,4},

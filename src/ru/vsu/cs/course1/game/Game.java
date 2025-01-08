@@ -1,6 +1,5 @@
 package ru.vsu.cs.course1.game;
 
-import java.util.Arrays;
 import java.util.Random;
 
 import static ru.vsu.cs.course1.game.MyUtils.getRandomEmptySlot;
@@ -96,23 +95,16 @@ public class Game {
         return true;
     }
 
+
+
     public void reField() {
+        //MyUtils.printMatrix2(fieldCopy);
         int[][] gfc = fieldCopy.clone();
         fieldCopy = field.clone();
         field = gfc.clone();
 
     }
-
-    public void moveLeft() {
-        this.field = MyUtils.rotateMatrixRight(this.field);
-        this.field = MyUtils.rotateMatrixRight(this.field);
-        moveRight();
-        this.field = MyUtils.rotateMatrixLeft(this.field);
-        this.field = MyUtils.rotateMatrixLeft(this.field);
-        System.out.println("Left");
-    }
-
-    public void moveRight() {
+    public void move() {
         int firstNum;
         int secondNum;
         for (int i = 0; i < field.length; i++) {
@@ -144,20 +136,31 @@ public class Game {
             }
             field[i] = newCol;
         }
-        System.out.println("Right");
         generateNumInFreeSlot();
+    }
+    public void moveRight(){
+        move();
+        System.out.println("Right");
+    }
+    public void moveLeft() {
+        this.field = MyUtils.rotateMatrixRight(this.field);
+        this.field = MyUtils.rotateMatrixRight(this.field);
+        move();
+        this.field = MyUtils.rotateMatrixLeft(this.field);
+        this.field = MyUtils.rotateMatrixLeft(this.field);
+        System.out.println("Left");
     }
 
     public void moveUp() {
         this.field = MyUtils.rotateMatrixRight(this.field);
-        moveRight();
+        move();
         this.field = MyUtils.rotateMatrixLeft(this.field);
         System.out.println("Up");
     }
 
     public void moveDown() {
         this.field = MyUtils.rotateMatrixLeft(this.field);
-        moveRight();
+        move();
         this.field = MyUtils.rotateMatrixRight(this.field);
         System.out.println("Down");
     }

@@ -11,6 +11,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
 
 public class MainForm extends JFrame {
     private JPanel panelMain;
@@ -100,7 +101,7 @@ public class MainForm extends JFrame {
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
                 if (e.getID() == KeyEvent.KEY_PRESSED) {
-                    if (!game.isLose()) game.fieldCopy = game.getField();
+                    if (!(game.isLose())) game.fieldCopy = game.field.clone();
                     if (e.getKeyCode() == 37) {
                         game.moveLeft();
                         updateView();
