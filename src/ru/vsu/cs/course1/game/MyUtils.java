@@ -1,6 +1,6 @@
 package ru.vsu.cs.course1.game;
 
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
+//import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
 
 import java.awt.*;
 import java.util.Arrays;
